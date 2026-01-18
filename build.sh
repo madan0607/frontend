@@ -1,6 +1,21 @@
 #!/bin/bash
 set -e
-echo "Building static HTML site..."
+
+echo "===================================="
+echo " Building static frontend site"
+echo "===================================="
+
+# Clean old build
+rm -rf build
 mkdir -p build
-cp index.html build/
-echo "Build complete. Output in /build"
+
+# Copy static files
+cp public/index.html build/
+
+# (Optional) copy JS if needed later
+cp -r src build/
+
+echo "===================================="
+echo " Build completed successfully"
+echo " Output directory: build/"
+echo "===================================="
