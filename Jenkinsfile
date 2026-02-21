@@ -3,8 +3,8 @@ pipeline {
 
     environment {
         AWS_DEFAULT_REGION = 'us-east-1'
-        S3_BUCKET = 'jenkins-static-b69f9ca4'
-        CLOUDFRONT_DISTRIBUTION_ID = 'E25ATDEDPYK4GD'
+        S3_BUCKET = 'nxtgen0607'
+        CLOUDFRONT_DISTRIBUTION_ID = 'EU68LC7DJWT3K'
     }
 
     stages {
@@ -29,7 +29,7 @@ pipeline {
             steps {
                 withCredentials([[
                     $class: 'AmazonWebServicesCredentialsBinding',
-                    credentialsId: 'frontend'
+                    credentialsId: 'aws-credentials'
                 ]]) {
                     sh '''
                       aws s3 sync build/ s3://$S3_BUCKET --delete
