@@ -1,17 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>AWS Microservices App</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AWS Microservices App</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'
+  viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
 </head>
+
 <body>
-  <h1>AWS DevOps Microservices Agile Project</h1>
+<h1>AWS DevOps Microservices Project By Nexgen Team</h1>
 
-  <button onclick="loadUsers()">Load Users</button>
-  <button onclick="loadOrders()">Load Orders</button>
+<hr>
 
-  <pre id="result"></pre>
+<h2>Register</h2>
+<input type="text" id="regName" placeholder="Name"><br><br>
+<input type="email" id="regEmail" placeholder="Email"><br><br>
+<input type="password" id="regPassword" placeholder="Password"><br><br>
+<button onclick="registerUser()" class="registerbtn">Register</button>
 
-  <script src="../src/app.js"></script>
+<hr>
+
+<h2>Login</h2>
+<input type="email" id="loginEmail" placeholder="Email"><br><br>
+<input type="password" id="loginPassword" placeholder="Password"><br><br>
+<button onclick="loginUser()" class="loginuserbtn">Login</button>
+
+<hr>
+
+<h2>Other Services</h2>
+<button onclick="loadUsers()" class="loaduserbtn">Load Users</button>
+<button onclick="loadOrders()" class="loadorders">Load Orders</button>
+
+<hr>
+
+<pre id="result"></pre>
+
+<script src="src/app.js"></script>
 </body>
 </html>
