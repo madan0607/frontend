@@ -4,26 +4,114 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>AWS Microservices App</title>
+
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'
   viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    color: white;
+    text-align: center;
+}
+
+.container {
+    max-width: 600px;
+    margin: 40px auto;
+    background: rgba(255,255,255,0.1);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+    backdrop-filter: blur(10px);
+}
+
+h1 {
+    background: linear-gradient(to right, #ffcc00, #ff6600);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+h2 {
+    color: #00f2fe;
+}
+
+input {
+    width: 80%;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    margin-bottom: 10px;
+}
+
+button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.registerbtn {
+    background: linear-gradient(45deg, #00c6ff, #0072ff);
+    color: white;
+}
+
+.loginuserbtn {
+    background: linear-gradient(45deg, #f7971e, #ffd200);
+    color: black;
+}
+
+.loaduserbtn {
+    background: linear-gradient(45deg, #43e97b, #38f9d7);
+}
+
+.loadorders {
+    background: linear-gradient(45deg, #ff512f, #dd2476);
+    color: white;
+}
+
+button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+}
+
+pre {
+    background: rgba(0,0,0,0.4);
+    padding: 15px;
+    border-radius: 10px;
+    text-align: left;
+    overflow-x: auto;
+}
+hr {
+    border: 1px solid rgba(255,255,255,0.2);
+}
+</style>
+
 </head>
 
 <body>
-<h1>AWS DevOps Microservices Project By Nexgen Team</h1>
+
+<div class="container">
+
+<h1>🚀 AWS DevOps Microservices Project By Nexgen Team</h1>
 
 <hr>
 
 <h2>Register</h2>
-<input type="text" id="regName" placeholder="Name"><br><br>
-<input type="email" id="regEmail" placeholder="Email"><br><br>
-<input type="password" id="regPassword" placeholder="Password"><br><br>
+<input type="text" id="regName" placeholder="Name"><br>
+<input type="email" id="regEmail" placeholder="Email"><br>
+<input type="password" id="regPassword" placeholder="Password"><br>
 <button onclick="registerUser()" class="registerbtn">Register</button>
 
 <hr>
 
 <h2>Login</h2>
-<input type="email" id="loginEmail" placeholder="Email"><br><br>
-<input type="password" id="loginPassword" placeholder="Password"><br><br>
+<input type="email" id="loginEmail" placeholder="Email"><br>
+<input type="password" id="loginPassword" placeholder="Password"><br>
 <button onclick="loginUser()" class="loginuserbtn">Login</button>
 
 <hr>
@@ -36,6 +124,104 @@
 
 <pre id="result"></pre>
 
-<script src="src/app.js"></script>
+</div>
+
+<script>
+        // Base URLs – change these if your services are deployed elsewhere
+        const USER_SERVICE_URL = 'http://localhost:4000';
+        const ORDER_SERVICE_URL = 'http://localhost:5002';
+
+        // Helper to display results
+        function displayResult(data) {
+            document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+        }
+
+        // Register
+        async function registerUser() {
+            const name = document.getElementById('regName').value;
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+
+            if (!name || !email || !password) {
+                alert('All fields required');
+                return;
+            }
+
+            try {
+                const res = await fetch(`${USER_SERVICE_URL}/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, password })
+                });
+                const data = await res.json();
+                displayResult(data);
+                if (res.ok) alert('Registration successful');
+            } catch (err) {
+                displayResult({ error: err.message });
+            }
+        }
+
+        // Login
+        async function loginUser() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            if (!email || !password) {
+                alert('Email and password required');
+                return;
+            }
+
+            try {
+                const res = await fetch(`${USER_SERVICE_URL}/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                const data = await res.json();
+                displayResult(data);
+                if (res.ok) {
+                    alert('Login successful');
+                    // Optionally save token in localStorage
+                    // localStorage.setItem('token', data.token);
+                }
+            } catch (err) {
+                displayResult({ error: err.message });
+            }
+        }
+
+        // Load users (requires no auth for demo)
+        async function loadUsers() {
+            try {
+                const res = await fetch(`${USER_SERVICE_URL}/users`);
+                const data = await res.json();
+                displayResult(data);
+            } catch (err) {
+                displayResult({ error: err.message });
+            }
+        }
+
+        // Load orders (from order service)
+        async function loadOrders() {
+            try {
+                const res = await fetch("https://api.amznpro.online/orders");
+                const data = await res.json();
+                displayResult(data);
+                // Also update the order list if you want
+                const list = document.getElementById('order-list');
+                if (Array.isArray(data)) {
+                    list.innerHTML = data.map(o => `<li>${o.product_name} - $${o.price} (Status: ${o.status})</li>`).join('');
+                } else {
+                    list.innerHTML = '<li>No orders or error</li>';
+                }
+            } catch (err) {
+                displayResult({ error: err.message });
+            }
+        }
+
+        // Alternative fetchOrders (same as loadOrders, kept for compatibility)
+        async function fetchOrders() {
+            await loadOrders();
+        }
+    </script>
 </body>
 </html>
