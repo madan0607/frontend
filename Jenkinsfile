@@ -4,7 +4,7 @@ pipeline {
     environment {
         AWS_DEFAULT_REGION = 'us-east-1'
         S3_BUCKET = 'nxtgen0607'
-        CLOUDFRONT_DISTRIBUTION_ID = 'EV6IE2GSIMKPL'
+        CLOUDFRONT_DISTRIBUTION_ID = 'E28P3HKPMPISKZ'
     }
 
     stages {
